@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Middlewares.Extensions;
+using Middlewares.Middlewares;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +35,10 @@ namespace Middlewares
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Middlewares", Version = "v1" });
             });
+
+            var serviceProvider = services.BuildServiceProvider();
+            var logger = serviceProvider.GetService<ILogger<HelloMiddleware>>();
+            services.AddSingleton(typeof(ILogger), logger);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +73,8 @@ namespace Middlewares
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseHello();
 
             app.UseAuthorization();
 

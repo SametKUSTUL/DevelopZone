@@ -64,59 +64,6 @@ namespace Middlewares
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Middlewares v1"));
             }
 
-            app.Use(async (context,next) =>
-            {
-                Console.WriteLine("Start use middleware1");
-                await next.Invoke();
-                Console.WriteLine("Stop use Middleware1");
-            });
-
-
-            app.Use(async (context, next) =>
-            {
-                Console.WriteLine("Start use middleware2");
-                await next.Invoke();
-                Console.WriteLine("Stop use Middleware2");
-            });
-
-            app.Map("/weatherforecast", builder =>
-            {
-                builder.Use(async (context, next) =>
-                {
-                    Console.WriteLine("weatherforecast started.");
-                    await next.Invoke();
-                    Console.WriteLine("Stop weatherforecast");
-                });
-
-            });
-
-            app.MapWhen(c => c.Request.Method == "GET", builder =>
-            {
-                builder.Use(async (context, task) =>
-                {
-                    Console.WriteLine("Get methodu start middleware");
-                    await task.Invoke();
-                    Console.WriteLine("Get methodu stop middleware");
-                });
-            });
-
-            app.Use(async (context, next) =>
-            {
-                Console.WriteLine("Start use middleware3");
-                await next.Invoke();
-                Console.WriteLine("Stop use Middleware3");
-            });
-
-            
-
-            app.Run(async context =>
-            {
-                Console.WriteLine("Run middleware kullanýldý. Bundan sonra hiç ibr middleware tetiklenemez.");
-            });
-            app.Run(async c => { await c.Response.WriteAsync("Middleware 2"); });// Bu middleware den sonrasý tetiklenmez.
-
-            app.Run(async c => { await c.Response.WriteAsync("Middleware 3"); });
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
